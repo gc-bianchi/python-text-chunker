@@ -6,9 +6,14 @@ def preprocess_text(text):
     text = re.sub(r"\s+", " ", text).strip()
     # Split text into sentences based on ".", "?", or "!"
     sentences = re.split(r"[.?!]\s*", text)
-    # Remove any empty strings that might occur due to splitting with 'if sentence'
+    # Remove any empty strings that might occur due to splitting
     sentences = [sentence.strip() for sentence in sentences if sentence]
-    return sentences
+    # Create a list of dicts with sentence text and index value
+    sentence_dicts = [
+        {"sentence": sentence, "index": i}
+        for i, sentence in enumerate(sentences, start=1)
+    ]
+    return sentence_dicts
 
 
 def main():
