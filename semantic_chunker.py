@@ -1,4 +1,5 @@
 import re
+import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -40,6 +41,25 @@ def find_distances(embeddings):
     return distances
 
 
+def group_sentences_into_chunks(sentences, distances, threshold):
+    chunks = []
+    current_chunk = [sentences[0]]
+
+    for i in range(1, len(sentences)):
+        if i - 1 < len(distances) and distances[i - 1] > threshold:
+            # If distance exceeds the threshold, start a new chunk
+            chunks.append(current_chunk)
+            current_chunk = [sentences[i]]
+        else:
+            current_chunk.append(sentences[i])
+
+    # Append the last chunk
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+
 def main():
     with open("./data/test_text.txt") as file:
         text = file.read()
@@ -50,7 +70,19 @@ def main():
 
     # print(distances[:3])
     breakpoint_distance_threshold = np.percentile(distances, 95)
-    print(breakpoint_distance_threshold)
+    # print(breakpoint_distance_threshold)
+
+    chunks = group_sentences_into_chunks(
+        cleaned_sentences, distances, breakpoint_distance_threshold
+    )
+
+    # print(chunks[:3])
+
+    for index, chunk in enumerate(chunks, start=1):
+        print(f"Chunk {index}:")
+        for sentence in chunk:
+            print(f"  - {sentence['sentence']}")
+        print()
 
 
 main()
