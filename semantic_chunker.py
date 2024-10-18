@@ -12,20 +12,15 @@ def preprocess_text(text):
     sentences = re.split(r"[.?!]\s*", text)
     # Remove any empty strings that might occur due to splitting
     sentences = [sentence.strip() for sentence in sentences if sentence]
-    # Create a list of dicts with sentence text and index value
-    sentence_dicts = [
-        {"sentence": sentence, "index": i}
-        for i, sentence in enumerate(sentences, start=1)
-    ]
-    return sentence_dicts
+    return sentences
 
 
 def compute_embeddings(sentences):
     # Use SentenceTransformer to get embeddings (free alternative)
     model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings = []
-    for sentence_dict in sentences:
-        sentence_embedding = model.encode(sentence_dict["sentence"])
+    for sentence in sentences:
+        sentence_embedding = model.encode(sentence)
         embeddings.append(np.array(sentence_embedding))
     return embeddings
 
@@ -78,11 +73,20 @@ def main():
 
     # print(chunks[:3])
 
+    # pretty print all chunks
     for index, chunk in enumerate(chunks, start=1):
         print(f"Chunk {index}:")
         for sentence in chunk:
-            print(f"  - {sentence['sentence']}")
+            print(f"  - {sentence}")
         print()
+
+    # pretty print first 3 chunks, change integer to see more chunks printed
+    # instead of printing all chunks to console
+    # for index, chunk in enumerate(chunks[:3], start=1):
+    #     print(f"Chunk {index}:")
+    #     for sentence in chunk:
+    #         print(f"  - {sentence['sentence']}")
+    #     print()
 
 
 main()
