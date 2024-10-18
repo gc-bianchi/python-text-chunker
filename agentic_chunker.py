@@ -1,4 +1,8 @@
+import os
 from transformers import pipeline
+
+# Disable tokenizers parallelism to avoid warnings
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 def summarize_text(text, max_summary_length=100):
@@ -17,7 +21,9 @@ def generate_title(summary):
         "text-generation", model="EleutherAI/gpt-neo-125M"
     )
 
-    prompt = f"Create a short, informative title (maximum 10 words) for the following summary: {summary}"
+    prompt = (
+        f"Create a short title (maximum 5 words) for the following summary: {summary}"
+    )
     title = title_generation_pipeline(
         prompt, max_new_tokens=10, num_return_sequences=1
     )[0]["generated_text"].split("\n")[0]
