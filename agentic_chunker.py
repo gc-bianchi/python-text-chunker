@@ -2,33 +2,30 @@ from transformers import pipeline
 
 
 def summarize_text(text, max_summary_length=100):
+
     summarization_pipeline = pipeline("summarization", model="facebook/bart-large-cnn")
 
     summary = summarization_pipeline(
         text, max_length=max_summary_length, min_length=30, do_sample=False
     )[0]["summary_text"]
-
     return summary
 
 
 def generate_title(summary):
 
-    title_generation_pipeline = pipeline("text-generation", model="gpt2")
-
-    prompt = f"Title: {summary}\nTitle:"
-    title = (
-        title_generation_pipeline(prompt, max_new_tokens=10, num_return_sequences=1)[0][
-            "generated_text"
-        ]
-        .split("\n")[0]
-        .replace("Title: ", "")
+    title_generation_pipeline = pipeline(
+        "text-generation", model="EleutherAI/gpt-neo-125M"
     )
 
+    prompt = f"Create a short, informative title (maximum 10 words) for the following summary: {summary}"
+    title = title_generation_pipeline(
+        prompt, max_new_tokens=10, num_return_sequences=1
+    )[0]["generated_text"].split("\n")[0]
     return title.strip()
 
 
 def main():
-    # random test text
+    # test text
     text = (
         "The rise of artificial intelligence (AI) has been one of the most significant technological developments "
         "of the 21st century. AI has been applied across industries, revolutionizing healthcare, finance, transportation, "
