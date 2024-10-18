@@ -1,5 +1,4 @@
 import re
-import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -56,7 +55,7 @@ def group_sentences_into_chunks(sentences, distances, threshold):
 
 
 def main():
-    with open("./data/test_text.txt") as file:
+    with open("./data/shorter_text.txt") as file:
         text = file.read()
 
     cleaned_sentences = preprocess_text(text)
