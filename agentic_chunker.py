@@ -21,13 +21,15 @@ def generate_title(summary):
         "text-generation", model="EleutherAI/gpt-neo-125M"
     )
 
-    prompt = (
-        f"Create a short title (maximum 5 words) for the following summary: {summary}"
-    )
-    title = title_generation_pipeline(
-        prompt, max_new_tokens=10, num_return_sequences=1
-    )[0]["generated_text"].split("\n")[0]
-    return title.strip()
+    prompt = f"Create a concise, 3-5 word title for the following summary:\nSummary: {summary}\nTitle:"
+    generated_text = title_generation_pipeline(
+        prompt, max_new_tokens=5, num_return_sequences=1
+    )[0]["generated_text"]
+    # Extract title by removing the prompt part
+    title = generated_text.split("Title:")[-1].strip()
+    # Limit title to 5 words or fewer
+    title = " ".join(title.split()[:5])
+    return title
 
 
 def main():
