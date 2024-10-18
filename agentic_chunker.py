@@ -23,12 +23,10 @@ def generate_title(summary):
 
     prompt = f"Create a concise, 3-5 word title for the following summary:\nSummary: {summary}\nTitle:"
     generated_text = title_generation_pipeline(
-        prompt, max_new_tokens=5, num_return_sequences=1
+        prompt, max_new_tokens=15, num_return_sequences=1
     )[0]["generated_text"]
-    # Extract title by removing the prompt part
-    title = generated_text.split("Title:")[-1].strip()
-    # Limit title to 5 words or fewer
-    title = " ".join(title.split()[:5])
+    # remove prompt from output and stop at the first newline
+    title = generated_text.split("Title:")[-1].split("\n")[0].strip()
     return title
 
 
