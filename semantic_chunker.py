@@ -34,7 +34,9 @@ def find_distances(embeddings):
     for i in range(1, len(embeddings)):
         # Compute cosine similarity between consecutive sentence embeddings
         similarity = cosine_similarity([embeddings[i - 1]], [embeddings[i]])[0][0]
-        distances.append(similarity)
+        # Calculate distance as 1 - similarity
+        distance = 1 - similarity
+        distances.append(distance)
     return distances
 
 
@@ -46,7 +48,9 @@ def main():
     embeddings = compute_embeddings(cleaned_sentences)
     distances = find_distances(embeddings)
 
-    print(distances[:3])
+    # print(distances[:3])
+    breakpoint_distance_threshold = np.percentile(distances, 95)
+    print(breakpoint_distance_threshold)
 
 
 main()
