@@ -17,29 +17,21 @@ def summarize_text(text, max_summary_length=100):
 
 def generate_title(summary):
 
+    # Use the title generator model from Hugging Face with text2text-generation pipeline
     title_generation_pipeline = pipeline(
-        "text-generation", model="EleutherAI/gpt-neo-125M"
+        "text2text-generation", model="TusharJoshi89/title-generator"
     )
 
-    prompt = f"Create a concise, 3-5 word title for the following summary:\nSummary: {summary}\nTitle:"
+    prompt = f"Provide a short, descriptive, and broad title that includes all key contributors (Galileo, Newton, Einstein) and their impact in the following summary: {summary}"
     generated_text = title_generation_pipeline(
-        prompt, max_new_tokens=15, num_return_sequences=1
-    )[0]["generated_text"]
-    # remove prompt from output and stop at the first newline
-    title = generated_text.split("Title:")[-1].split("\n")[0].strip()
-    return title
+        prompt, max_new_tokens=25, num_return_sequences=1
+    )[0]["generated_text"].strip()
+    return generated_text
 
 
 def main():
-    # test text
-    text = (
-        "The rise of artificial intelligence (AI) has been one of the most significant technological developments "
-        "of the 21st century. AI has been applied across industries, revolutionizing healthcare, finance, transportation, "
-        "and many other fields. However, with great power comes great responsibility, and ethical concerns have arisen "
-        "regarding the potential misuse of AI, bias in algorithms, and the impact on jobs. To ensure that AI is developed "
-        "and applied in a beneficial way, it is crucial to establish guidelines and regulations that foster transparency, "
-        "fairness, and accountability."
-    )
+    with open("./data/shorter_text.txt") as file:
+        text = file.read()
 
     summary = summarize_text(text)
     print("Summary:")
