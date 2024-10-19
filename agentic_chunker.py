@@ -15,16 +15,14 @@ def summarize_text(text, max_summary_length=100):
     return summary
 
 
-def generate_title(summary):
-
-    # Use the title generator model from Hugging Face with text2text-generation pipeline
+def generate_title(text):
     title_generation_pipeline = pipeline(
         "text2text-generation", model="TusharJoshi89/title-generator"
     )
 
-    prompt = f"Provide a short, descriptive, and broad title that includes all key contributors (Galileo, Newton, Einstein) and their impact in the following summary: {summary}"
+    prompt = f"Generate a concise and descriptive title for the following text: {text}"
     generated_text = title_generation_pipeline(
-        prompt, max_new_tokens=25, num_return_sequences=1
+        prompt, max_new_tokens=30, num_return_sequences=1
     )[0]["generated_text"].strip()
     return generated_text
 
@@ -37,7 +35,7 @@ def main():
     print("Summary:")
     print(summary)
 
-    title = generate_title(summary)
+    title = generate_title(text)
     print("\nTitle:")
     print(title)
 
