@@ -79,7 +79,7 @@ def group_sentences_into_chunks(sentences, distances, threshold):
 
 
 def main():
-    with open("./data/shorter_text.txt") as file:
+    with open("./data/test_text.txt") as file:
         text = file.read()
 
     cleaned_sentences = preprocess_text(text)
@@ -92,17 +92,14 @@ def main():
         cleaned_sentences, distances, breakpoint_distance_threshold
     )
 
-    summary = summarize_text(text)
-    print("Summary:")
-    print(summary)
-
-    title = generate_title(text)
-    print("\nTitle:")
-    print(title)
-
-    print("\nChunks:")
+    print("\nChunks with Summary and Title:")
     for index, chunk in enumerate(chunks, start=1):
-        print(f"\nChunk {index}:")
+        chunk_text = " ".join(chunk)
+        chunk_summary = summarize_text(chunk_text)
+        chunk_title = generate_title(chunk_text)
+        print(f"\nChunk {index} (ID: {index}):")
+        print(f"Title: {chunk_title}")
+        print(f"Summary: {chunk_summary}")
         for sentence in chunk:
             print(f"  - {sentence}")
 
